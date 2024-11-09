@@ -10,6 +10,8 @@ import asyncio
 from config import *
 from keyboards import *
 from text import *
+from admin import *
+from db import *
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API)
@@ -58,10 +60,12 @@ async def buy_other(call):
     await call.message.answer(text=t_other)
     await call.answer()
 
+
 @dp.callback_query_handler(text='back_to_catalog')
 async def back(call):
     await call.message.answer('Что интересует?', reply_markup=catalog_kb)
     await call.answer()
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

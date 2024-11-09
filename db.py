@@ -6,38 +6,19 @@ cursor = connection.cursor()
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Users(
-id INTEGER PRIMARY KEY,
- username TEXT NOT NULL,
- email TEXT NOT NULL,
- ags INTEGER
- )
- """)
+id INTEGER,
+username TEXT,
+first_name TEXT,
+block INTEGER);
+""")
 
-cursor.execute("CREATE INDEX IF NOT EXISTS idx_email ON Users(email)")
+def add_user(id_user, username, first_name):
+    check_user = cursor.execute(f'SELECT * FROM Users WHERE id={id_user}')
 
-# cursor.execute("INSERT INTO Users (username, email, ags) VALUES(?, ?, ?)", ("newuser", "ex@mail.ru", "28"))
-for i in range(30):
-    cursor.execute("INSERT INTO Users (username, email, ags) VALUES(?, ?, ?)",
-                   (f"{i}newuser", f"{i}ex@mail.ru", f"{rdi(22, 60)}"))
-
-# cursor.execute("UPDATE Users SET ags=? WHERE username=?", (39, "newuser"))
-# cursor.execute("DELETE FROM Users WHERE username=?", ("newuser",))
-
-# cursor.execute("SELECT * FROM Users")
-# cursor.execute("SELECT username, ags FROM Users WHERE ags > ?", (29,))
-# cursor.execute("SELECT username, ags FROM Users GROUP BY ags")
-# cursor.execute("SELECT username, ags FROM Users WHERE (ags > ? AND ags < ?)", (40, 50))
-# a, b = 45, 50
-# cursor.execute(f"SELECT username, ags FROM Users WHERE (ags > {a} AND ags < {b}) ORDER BY ags")
-
-cursor.execute("SELECT COUNT(*) FROM Users")
-total1 = cursor.fetchone()[0]
-print(total1)
-
-# users = cursor.fetchall()
-# for user in users:
-#     print(*user, sep=': ')
+    if check_user.fetchone() is None:
+        cursor.execute(f'INSERT INTO Users VALUES("{id_user}", "{username}", "{first_name}", 0)')
+    connection.commit()
 
 
-# connection.commit()
-# connection.close()
+connection.commit()
+connection.close()
